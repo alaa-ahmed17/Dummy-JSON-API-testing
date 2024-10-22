@@ -1,0 +1,709 @@
+[{
+  "AuthonticationSchema":{
+  "type": "object",
+  "properties": {
+    "accessToken": {
+      "type": "string",
+      "description": "JWT access token"
+    },
+    "refreshToken": {
+      "type": "string",
+      "description": "JWT refresh token"
+    },
+    "id": {
+      "type": "integer",
+      "description": "User ID"
+    },
+    "username": {
+      "type": "string",
+      "description": "Username of the user"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "User's email address"
+    },
+    "firstName": {
+      "type": "string",
+      "description": "First name of the user"
+    },
+    "lastName": {
+      "type": "string",
+      "description": "Last name of the user"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["male", "female"],
+      "description": "Gender of the user"
+    },
+    "image": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the user's profile image"
+    }
+  },
+  "required": ["accessToken", "refreshToken", "id", "username", "email", "firstName", "lastName", "gender", "image"]
+},
+  "productSchema":{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "discountPercentage": {
+      "type": "number"
+    },
+    "rating": {
+      "type": "number"
+    },
+    "stock": {
+      "type": "integer"
+    },
+    "tags": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "brand": {
+      "type": "string"
+    },
+    "sku": {
+      "type": "string"
+    },
+    "weight": {
+      "type": "integer"
+    },
+    "dimensions": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "depth": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "depth"
+      ]
+    },
+    "warrantyInformation": {
+      "type": "string"
+    },
+    "shippingInformation": {
+      "type": "string"
+    },
+    "availabilityStatus": {
+      "type": "string"
+    },
+    "reviews": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "rating": {
+              "type": "integer"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "reviewerName": {
+              "type": "string"
+            },
+            "reviewerEmail": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "rating",
+            "comment",
+            "date",
+            "reviewerName",
+            "reviewerEmail"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "rating": {
+              "type": "integer"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "reviewerName": {
+              "type": "string"
+            },
+            "reviewerEmail": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "rating",
+            "comment",
+            "date",
+            "reviewerName",
+            "reviewerEmail"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "rating": {
+              "type": "integer"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "reviewerName": {
+              "type": "string"
+            },
+            "reviewerEmail": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "rating",
+            "comment",
+            "date",
+            "reviewerName",
+            "reviewerEmail"
+          ]
+        }
+      ]
+    },
+    "returnPolicy": {
+      "type": "string"
+    },
+    "minimumOrderQuantity": {
+      "type": "integer"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "barcode": {
+          "type": "string"
+        },
+        "qrCode": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "createdAt",
+        "updatedAt",
+        "barcode",
+        "qrCode"
+      ]
+    },
+    "images": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "thumbnail": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "description",
+    "category",
+    "price",
+    "discountPercentage",
+    "rating",
+    "stock",
+    "tags",
+    "brand",
+    "sku",
+    "weight",
+    "dimensions",
+    "warrantyInformation",
+    "shippingInformation",
+    "availabilityStatus",
+    "reviews",
+    "returnPolicy",
+    "minimumOrderQuantity",
+    "meta",
+    "images",
+    "thumbnail"
+  ]
+},
+"userSchema":{
+    
+     "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "maidenName": {
+      "type": "string"
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["male", "female"]
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string",
+      "pattern": "^\\+?[0-9\\-\\s]+$"
+    },
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "birthDate": {
+      "type": "string",
+     
+      "pattern": "^\\d{4}-\\d{1}||d{2}-\\d{2}||d{1}$" 
+    },
+    "ssn": {
+      "type": "string",
+      "pattern": "^\\d{3}-\\d{3}-\\d{3}$"
+    },
+    "image": {
+      "type": "string",
+      "format": "uri"
+    },
+    "bloodGroup": {
+      "type": "string"
+    },
+    "height": {
+      "type": "number"
+    },
+    "weight": {
+      "type": "number"
+    },
+    "eyeColor": {
+      "type": "string"
+    },
+    "hair": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": ["color", "type"]
+    },
+    "ip": {
+      "type": "string",
+      "format": "ipv4"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "stateCode": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            }
+          },
+          "required": ["lat", "lng"]
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": ["address", "city", "state", "stateCode", "postalCode", "coordinates", "country"]
+    },
+    "macAddress": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-fA-F]{2}[:-]){5}(?:[0-9a-fA-F]{2})$"
+    },
+    "university": {
+      "type": "string"
+    },
+    "bank": {
+      "type": "object",
+      "properties": {
+        "cardExpire": {
+          "type": "string",
+          "pattern": "^(0[1-9]|1[0-2])\\/\\d{2}$"
+        },
+        "cardNumber": {
+          "type": "string",
+          "pattern": "^(\\d{16}|\\d{19})$"
+        },
+        "cardType": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        }
+      },
+      "required": ["cardExpire", "cardNumber", "cardType", "currency", "iban"]
+    },
+    "company": {
+      "type": "object",
+      "properties": {
+        "department": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "stateCode": {
+              "type": "string"
+            },
+            "postalCode": {
+              "type": "string"
+            },
+            "coordinates": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "required": ["lat", "lng"]
+            },
+            "country": {
+              "type": "string"
+            }
+          },
+          "required": ["address", "city", "state", "stateCode", "postalCode", "coordinates", "country"]
+        }
+      },
+      "required": ["department", "name", "title", "address"]
+    },
+    "ein": {
+      "type": "string"
+    },
+  
+    "userAgent": {
+      "type": "string"
+    },
+    "crypto": {
+      "type": "object",
+      "properties": {
+        "coin": {
+          "type": "string"
+        },
+        "wallet": {
+          "type": "string"
+        },
+        "network": {
+          "type": "string"
+        }
+      },
+      "required": ["coin", "wallet", "network"]
+    },
+    "role": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id", "firstName", "lastName", "maidenName", "age", "gender", "email", "phone",
+    "username", "password", "birthDate", "image", "bloodGroup", "height", "weight",
+    "eyeColor", "hair", "ip", "address", "macAddress", "university", "bank", "company",
+    "ein", "ssn", "userAgent", "crypto", "role"
+  ]
+},
+"cartSchema":{
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "products": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "quantity": {
+              "type": "integer"
+            },
+            "total": {
+              "type": "number"
+            },
+            "discountPercentage": {
+              "type": "number"
+            },
+            "discountedTotal": {
+              "type": "number"
+            },
+            "discountedPrice":{
+              "type":"number"
+            },
+            "thumbnail": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "price",
+            "quantity",
+            "total",
+            "discountPercentage",
+            "thumbnail"
+          ],
+          "anyOf": [
+            {
+              "required": ["discountedTotal"]
+            },
+            {
+              "required": ["discountedPrice"]
+            }
+          ]
+        }
+      },
+      "total": {
+        "type": "number"
+      },
+      "discountedTotal": {
+        "type": "number"
+      },
+      "userId": {
+        "type": "integer"
+      },
+      "totalProducts": {
+        "type": "integer"
+      },
+      "totalQuantity": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "id",
+      "products",
+      "total",
+      "discountedTotal",
+      "userId",
+      "totalProducts",
+      "totalQuantity"
+    ]
+  },
+  "userCartSchema":
+  {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "carts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "total": {
+                    "type": "number"
+                  },
+                  "discountPercentage": {
+                    "type": "number"
+                  },
+                  "discountedTotal": {
+                    "type": "number"
+                  },
+                  "thumbnail": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "price",
+                  "quantity",
+                  "total",
+                  "discountPercentage",
+                  "discountedTotal",
+                  "thumbnail"
+                ]
+              }
+            },
+            "total": {
+              "type": "number"
+            },
+            "discountedTotal": {
+              "type": "number"
+            },
+            "userId": {
+              "type": "integer"
+            },
+            "totalProducts": {
+              "type": "integer"
+            },
+            "totalQuantity": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "products",
+            "total",
+            "discountedTotal",
+            "userId",
+            "totalProducts",
+            "totalQuantity"
+          ]
+        }
+      },
+      "total": {
+        "type": "integer"
+      },
+      "skip": {
+        "type": "integer"
+      },
+      "limit": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "carts",
+      "total",
+      "skip",
+      "limit"
+    ]
+  },
+  "products":{
+  "1": "Essence Mascara Lash Princess",
+  "2": "Eyeshadow Palette with Mirror",
+  "3": "Powder Canister",
+  "4":"Red Lipstick",
+  "5":"Red Nail Polish",
+  "6":"Calvin Klein CK One",
+  "7":"Chanel Coco Noir Eau De",
+  "8":"Dior J'adore",
+  "9":"Dolce Shine Eau de",
+  "10":"Gucci Bloom Eau de",
+  "11":"Annibale Colombo Bed",
+  "12":"Annibale Colombo Sofa",
+  "13":"Bedside Table African Cherry",
+  "14":"Knoll Saarinen Executive Conference Chair"
+
+  }
+}
+]
+
+
