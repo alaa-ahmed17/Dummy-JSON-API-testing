@@ -1,12 +1,713 @@
 {
 	"info": {
-		"_postman_id": "4896cf89-3123-4375-8c43-77174133cb40",
+		"_postman_id": "b74406b6-4b14-45bb-9c43-f9f7834f1082",
 		"name": "DEPI API Project",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33818634",
-		"_collection_link": "https://the-achievers.postman.co/workspace/6c2f44e7-61fc-4e99-8e2c-ae44afdd23b4/collection/15032720-4896cf89-3123-4375-8c43-77174133cb40?action=share&source=collection_link&creator=33818634"
+		"_collection_link": "https://the-achievers.postman.co/workspace/The-Achievers-Workspace~6c2f44e7-61fc-4e99-8e2c-ae44afdd23b4/collection/33818634-b74406b6-4b14-45bb-9c43-f9f7834f1082?action=share&source=collection_link&creator=33818634"
 	},
 	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login user and get tokens",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"//Status Code Check\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const schema = pm.iterationData.get(\"AuthonticationSchema\");\r",
+									"\r",
+									"pm.test('Schema is valid', function () {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"const accessToken = response.accessToken;\r",
+									"const refreshToken = response.refreshToken;\r",
+									"\r",
+									"// Set tokens as global variables\r",
+									"pm.globals.set(\"accessToken\", accessToken);\r",
+									"pm.globals.set(\"refreshToken\", refreshToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"emilys\",\r\n    \"password\": \"emilyspass\",\r\n    \"expiresInMins\": 30\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AuthURL}}/login",
+							"host": [
+								"{{AuthURL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get current auth user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.globals.get(\"accessToken\") });\r",
+									"\r",
+									"//Status Code Check\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const schema = pm.iterationData.get(\"userSchema\");\r",
+									"\r",
+									"pm.test('Schema is valid', function () {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{AuthURL}}/me",
+							"host": [
+								"{{AuthURL}}"
+							],
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh auth session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"const refreshToken = pm.globals.get(\"refreshToken\");\r",
+									"if (!refreshToken) {\r",
+									"    console.log(\"Refresh token is missing\");\r",
+									"}\r",
+									"let requestBody = {\r",
+									"    refreshToken: refreshToken,\r",
+									"    expiresInMins: 30\r",
+									"};\r",
+									"pm.request.body.update(JSON.stringify(requestBody));\r",
+									"\r",
+									"\r",
+									"\r",
+									"//Status Code Check\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if user data is returned\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"accessToken\");\r",
+									"    pm.expect(jsonData).to.have.property(\"refreshToken\");\r",
+									"});\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AuthURL}}/refresh",
+							"host": [
+								"{{AuthURL}}"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalid auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code 400 or 401\",()=>{\r",
+									"    pm.expect(pm.response.code).oneOf([400,401]);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if message is returned\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"wrongUsername\",\r\n    \"password\": \"wrongPasward\",\r\n    \"expiresInMins\": 30\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AuthURL}}/login",
+							"host": [
+								"{{AuthURL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dynamic image",
+			"item": [
+				{
+					"name": "Generate square image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// test the content of header is image/png\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('image/png');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ImageURL}}/150",
+							"host": [
+								"{{ImageURL}}"
+							],
+							"path": [
+								"150"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate custom size",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// test the content of header is image/png\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('image/png');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ImageURL}}/200x100\n",
+							"host": [
+								"{{ImageURL}}"
+							],
+							"path": [
+								"200x100\n"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate image with custom text",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// test the content of header is image/png\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('image/png');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ImageURL}}/400x200/008080/ffffff?text=Hello+Peter\n",
+							"host": [
+								"{{ImageURL}}"
+							],
+							"path": [
+								"400x200",
+								"008080",
+								"ffffff"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "Hello+Peter\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate image with custom colors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// test the content of header is image/png\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('image/png');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ImageURL}}/400x200/282828\n",
+							"host": [
+								"{{ImageURL}}"
+							],
+							"path": [
+								"400x200",
+								"282828\n"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate image with different formats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Content-Type header\", function () {\r",
+									"    // Get the expected type from the query parameters\r",
+									"    const expectedType = pm.request.url.query.find(param => param.key === 'type').value;\r",
+									"    \r",
+									"    // Get the actual Content-Type from the response headers\r",
+									"    const actualContentType = pm.response.headers.get('Content-Type');\r",
+									"    \r",
+									"    // Check if the Content-Type matches the expected type\r",
+									"    pm.expect(actualContentType).to.include(expectedType);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ImageURL}}/400x200?type=webp&text=I+am+a+webp+image\n",
+							"host": [
+								"{{ImageURL}}"
+							],
+							"path": [
+								"400x200"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "webp"
+								},
+								{
+									"key": "text",
+									"value": "I+am+a+webp+image\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate image with custom font family",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// test the content of header is image/png\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('image/png');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ImageURL}}/400x200/282828?fontFamily=pacifico&text=I+am+a+pacifico+font",
+							"host": [
+								"{{ImageURL}}"
+							],
+							"path": [
+								"400x200",
+								"282828"
+							],
+							"query": [
+								{
+									"key": "fontFamily",
+									"value": "pacifico"
+								},
+								{
+									"key": "text",
+									"value": "I+am+a+pacifico+font"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate image with custom font size",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// test the content of header is image/png\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('image/png');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ImageURL}}/400x200/008080/ffffff?text=Hello+Peter!&fontSize=16",
+							"host": [
+								"{{ImageURL}}"
+							],
+							"path": [
+								"400x200",
+								"008080",
+								"ffffff"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "Hello+Peter!"
+								},
+								{
+									"key": "fontSize",
+									"value": "16"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate identicon",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status Code Check\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// test the content of header is image/png\r",
+									"pm.test(\"Response is an image blob\", function () {\r",
+									"    var blob = pm.response.stream;\r",
+									"    pm.expect(blob).to.be.ok;\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('image/png');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Response Time Check\r",
+									"\r",
+									"pm.test(\"check Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/icon/abc123/150",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"icon",
+								"abc123",
+								"150"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Products&category",
 			"item": [
@@ -476,6 +1177,11 @@
 											"    pm.response.to.have.status(201);\r",
 											"});\r",
 											"\r",
+											"//Response Time Check\r",
+											"pm.test(\"Response time is less than 1000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+											"});\r",
+											"\r",
 											"// Parse the response body as JSON\r",
 											"const jsonResponse = pm.response.json();\r",
 											"\r",
@@ -543,6 +1249,15 @@
 										"exec": [
 											"// Parse the response body as JSON\r",
 											"const jsonResponse = pm.response.json();\r",
+											"//Status Code Check\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"//Response Time Check\r",
+											"pm.test(\"Response time is less than 1000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+											"});\r",
 											"\r",
 											"// Parse the request body as JSON (if you are sending JSON in the request body)\r",
 											"const requestBody = JSON.parse(pm.request.body);\r",
@@ -859,111 +1574,59 @@
 					"name": "Get all Carts",
 					"event": [
 						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"\r",
-									"\r",
-									"// test case 1 : to validate that the response is 200 ok \r",
+									"// to validate that the response is 200 ok \r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"// test case 2 : to validate that the response is appeared in Jason\r",
+									"// to validate that the response is appeared in Jason\r",
 									"pm.test(\"Response is JSON\", function () {\r",
 									"    pm.response.to.have.jsonBody();\r",
 									"});\r",
-									"// test case 3: to count the number of the item of all Carts \r",
 									"\r",
-									"//condition ? valueIfTrue : valueIfFalse; ==If there are carts, count them. If there are no carts, say there are 0//\r",
-									"//const responseJson  = pm.response.json();\r",
-									"const cartData  = pm.response.json();\r",
-									"console.log(\"Response JSON:\", cartData );\r",
-									"//const numberOfCarts = cartData .carts.length;\r",
-									"const numberOfCarts = cartData .carts ? cartData .carts.length : 0;\r",
-									"console.log(\"Number of carts:\", numberOfCarts);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
 									"\r",
-									"\r",
-									"// test case 4:Carts property exists and is an array\r",
-									"\r",
+									"// Carts property exists and is an array\r",
+									"jsonData = pm.response.json();\r",
 									"pm.test(\"Carts property exists and is an array\", ()=> {\r",
-									"    const jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"carts\").that.is.an(\"array\");\r",
 									"});\r",
-									"// test case 5: Carts is not empty\r",
-									"\r",
-									"  pm.test(\"carts is not empty\",function(){\r",
-									"  const jsonData= pm.response.json();\r",
-									"  pm.expect(jsonData.carts).that.is.not.empty;\r",
-									"\r",
+									"// Carts is not empty\r",
+									"pm.test(\"carts is not empty\",function(){\r",
+									"    pm.expect(jsonData.carts).that.is.not.empty;\r",
 									"});\r",
 									"\r",
-									"\r",
-									"// test case 6: to validate that Each product in carts has required properties \r",
-									"\r",
-									"pm.test(\"to validate that Each product in carts has required properties \", ()=> {\r",
-									"    \r",
-									"    const carts = pm.response.json().carts;\r",
-									"    carts.forEach(cart => {\r",
-									"    cart.products.forEach(product => {\r",
-									"            \r",
-									"        pm.expect(product).to.have.all.keys('id', 'title', 'price', 'quantity', 'total', 'discountPercentage', 'discountedTotal', 'thumbnail');\r",
-									"\r",
-									"        //  pm.expect(product.price).to.be.greaterThan(0);\r",
-									"        });\r",
-									"    });\r",
-									"\r",
-									"});\r",
-									"\r",
-									"\r",
-									"// test case 7: to validate that Each cart  has required properties \r",
-									"\r",
-									"pm.test(\"Each cart has required properties\", function () {\r",
-									"    const carts = pm.response.json().carts;\r",
-									"    carts.forEach(cart => {\r",
-									"        pm.expect(cart).to.have.all.keys('id', 'products', 'total', 'discountedTotal', 'userId', 'totalProducts', 'totalQuantity');\r",
+									"// to validate that Each product in carts has required properties \r",
+									"const schema = pm.iterationData.get(\"cartSchema\");\r",
+									"pm.test(\"check Each product has correct schema\", function () {\r",
+									"    jsonData.carts.forEach(cart => {\r",
+									"        pm.expect(cart).to.have.jsonSchema(schema);\r",
 									"    });\r",
 									"});\r",
 									"\r",
-									"\r",
-									"//test case 8: to validate that Total and discountedTotal are numbers\r",
-									"\r",
-									"pm.test(\"Total , discountedTotal, totalProducts and totalQuantity are numbers\", function () {\r",
-									"\r",
-									"        const carts = pm.response.json().carts;\r",
-									"        carts.forEach(cart=>{\r",
-									"            pm.expect(cart.total).to.be.a('number');\r",
-									"            pm.expect(cart.discountedTotal).to.be.a('number');\r",
-									"             pm.expect(cart.totalProducts).to.be.a('number');\r",
-									"             pm.expect(cart.totalQuantity).to.be.a('number');\r",
-									"\r",
-									"\r",
-									"        });\r",
-									"\r",
-									"  });\r",
-									"\r",
-									"//test case 9: Check if all product prices are greater than zero:\r",
-									"\r",
-									"\r",
-									"\r",
-									"  pm.test(\"All product prices are greater than zero\", function () {\r",
-									"    const carts = pm.response.json().carts;\r",
-									"    carts.forEach(cart => {\r",
+									"// Check if all product prices are greater than zero:\r",
+									"pm.test(\"All product prices are greater than zero\", function () {\r",
+									"    jsonData.carts.forEach(cart => {\r",
 									"        cart.products.forEach(product => {\r",
 									"            pm.expect(product.price).to.be.greaterThan(0);\r",
 									"        });\r",
 									"    });\r",
 									"});\r",
-									"\r",
-									"\r",
-									"\r",
-									"\r",
-									"\r",
-									"\r",
-									"\r",
-									"\r",
-									"\r",
-									"\r",
 									""
 								],
 								"type": "text/javascript",
@@ -987,21 +1650,16 @@
 							}
 						},
 						"url": {
-							"raw": "https://dummyjson.com/carts",
-							"protocol": "https",
+							"raw": "{{CartPath}}",
 							"host": [
-								"dummyjson",
-								"com"
-							],
-							"path": [
-								"carts"
+								"{{CartPath}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get single cart",
+					"name": "Get single Cart",
 					"event": [
 						{
 							"listen": "test",
